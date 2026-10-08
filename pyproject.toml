@@ -58,6 +58,7 @@ extend-exclude = [".artifacts"]
 select = ["E", "F", "I", "UP", "B", "ASYNC", "RUF"]
 
 [tool.mypy]
+plugins = ["pydantic.mypy"]
 python_version = "3.12"
 strict = true
 mypy_path = "src"
