@@ -10,4 +10,5 @@ htmlcov/
 dist/
 node_modules/
 .artifacts/
-
+.poetry/
+src/payment_processing/VERSION
