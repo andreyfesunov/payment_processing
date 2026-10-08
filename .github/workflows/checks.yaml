@@ -9,6 +9,7 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install poetry==2.3.2
+      - run: poetry sync --no-root
       - run: poetry sync
       - run: poetry run pre-commit run --all-files
       - run: cp .env.example .env

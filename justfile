@@ -1,6 +1,7 @@
 set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 
 setup:
+    poetry sync --no-root
     poetry sync
     poetry run pre-commit install --hook-type pre-commit --hook-type commit-msg
     poetry run python -c "from pathlib import Path; p = Path('.env'); p.exists() or p.write_bytes(Path('.env.example').read_bytes())"
