@@ -11,4 +11,8 @@ jobs:
       - run: pip install poetry==2.3.2
       - run: poetry sync
       - run: poetry run pre-commit run --all-files
-      - run: poetry run pytest -m 'not integration'
+      - run: cp .env.example .env
+      - run: docker compose up -d --wait postgres rabbitmq
+      - run: poetry run pytest
+      - if: always()
+        run: docker compose down
