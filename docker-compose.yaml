@@ -31,6 +31,32 @@ services:
       timeout: 5s
       retries: 30
 
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://payments:payments@postgres:5432/payments
+      RABBITMQ_URL: amqp://payments:payments@rabbitmq:5672/
+    command: ["python", "-m", "payment_processing.main", "api"]
+    ports:
+      - "8000:8000"
+
+  consumer:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://payments:payments@postgres:5432/payments
+      RABBITMQ_URL: amqp://payments:payments@rabbitmq:5672/
+    command: ["python", "-m", "payment_processing.main", "consumer"]
+
+  outbox:
+    build: .
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://payments:payments@postgres:5432/payments
+      RABBITMQ_URL: amqp://payments:payments@rabbitmq:5672/
+    command: ["python", "-m", "payment_processing.main", "outbox"]
+
 volumes:
   postgres_data:
   rabbitmq_data:

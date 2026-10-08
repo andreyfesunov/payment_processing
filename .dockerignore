@@ -1,0 +1,11 @@
+.git
+.env
+.venv
+.poetry
+dist
+**/__pycache__
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/test_*.py
+**/conftest.py
