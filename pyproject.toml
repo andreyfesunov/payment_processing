@@ -1,9 +1,6 @@
 [project]
 name = "payment-processing"
 dynamic = ["version"]
-description = "Asynchronous payment processing with transactional outbox"
-authors = [{ name = "Andrey Fesunov" }]
-readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "fastapi>=0.115,<1",
@@ -19,7 +16,7 @@ dependencies = [
 
 [tool.poetry]
 packages = [{ include = "payment_processing", from = "src" }]
-include = [{ path = "VERSION", format = "sdist" }, { path = "src/payment_processing/VERSION", format = ["sdist", "wheel"] }]
+include = [{ path = "VERSION", format = "sdist" }]
 version = "0.0.0"
 
 [tool.poetry.requires-plugins]
@@ -30,13 +27,6 @@ enable = true
 
 [tool.poetry-dynamic-versioning.from-file]
 source = "VERSION"
-
-[tool.poetry-dynamic-versioning.substitution]
-files = []
-
-[tool.poetry-dynamic-versioning.files."src/payment_processing/VERSION"]
-initial-content-jinja = "{{ formatted_version }}\n"
-persistent-substitution = true
 
 [tool.poetry.group.dev.dependencies]
 ruff = ">=0.9,<1"
@@ -52,21 +42,20 @@ build-backend = "poetry_dynamic_versioning.backend"
 [tool.ruff]
 target-version = "py312"
 line-length = 100
-extend-exclude = [".artifacts"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "ASYNC", "RUF"]
 
 [tool.mypy]
 plugins = ["pydantic.mypy"]
-python_version = "3.12"
 strict = true
+explicit_package_bases = true
 mypy_path = "src"
-files = ["src", "scripts"]
+files = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["src", "scripts"]
+testpaths = ["src"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "--strict-markers"
-markers = ["integration: requires PostgreSQL or RabbitMQ", "e2e: requires full Compose environment"]
+addopts = "--strict-markers --import-mode=importlib"
+markers = ["integration: requires PostgreSQL or RabbitMQ"]

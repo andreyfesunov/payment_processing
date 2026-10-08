@@ -1,28 +1,35 @@
-set windows-shell := ["powershell.exe", "-NoLogo", "-NoProfile", "-Command"]
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 
 setup:
-    python scripts/develop.py setup
+    poetry sync
+    poetry run pre-commit install --hook-type pre-commit --hook-type commit-msg
+    poetry run python -c "from pathlib import Path; p = Path('.env'); p.exists() or p.write_bytes(Path('.env.example').read_bytes())"
 
 run:
-    python scripts/develop.py run
+    docker compose build
+    docker compose up -d --wait postgres rabbitmq
+    docker compose run --rm --no-deps api alembic upgrade head
+    docker compose up -d api consumer outbox
 
 check:
-    python scripts/develop.py check
+    poetry check --lock
+    poetry run pre-commit run --all-files
 
 test:
-    python scripts/develop.py test
+    poetry run pytest -m "not integration"
 
 test-integration:
-    python scripts/develop.py test-integration
+    docker compose up -d --wait postgres rabbitmq
+    poetry run pytest -m integration
 
 migrate:
-    python scripts/develop.py migrate
+    poetry run alembic upgrade head
 
 build:
-    python scripts/develop.py build
+    poetry build
 
 logs:
-    python scripts/develop.py logs
+    docker compose logs -f --tail 100
 
 down:
-    python scripts/develop.py down
+    docker compose down

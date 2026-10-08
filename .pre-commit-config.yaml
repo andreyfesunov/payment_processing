@@ -18,9 +18,9 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.21.0
+    hooks:
       - id: commitlint
-        name: commitlint
-        entry: node node_modules/@commitlint/cli/cli.js --edit
-        language: system
         stages: [commit-msg]
-        always_run: true
+        additional_dependencies: ["@commitlint/config-conventional"]
